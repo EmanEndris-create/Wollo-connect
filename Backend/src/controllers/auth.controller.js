@@ -44,17 +44,21 @@ const signup = async(req, res)=>{
     image: randomAvatar,
   });
 
-  await upsertStreamUser({
+  try{
+    await upsertStreamUser({
     id: newUserId.toString(),
     name: fullName,
     image: randomAvatar || "",
   });
 
-  console.log(`Stream user upserted for ${fullName}`);
+    console.log(`Stream user upserted for ${fullName}`);
+  }catch(error){
+    console.error('error upserting stream user:', error);
+  }
 
   const accessToken = generateToken(res, newUserId);
 
-  return res.status(201).json({message: 'User signed up successfully.', userId: newUserId});
+  return res.status(201).json({message: 'User signed up successfully.', accessToken});
 
 }catch(error){
   console.error('Error during signup:', error);
@@ -83,16 +87,11 @@ const signin = async(req, res)=>{
       return res.status(400).json({message: 'Invalid email or password.'});
     }
 
-    const accessToken = generateToken(res, user);
+    const accessToken = generateToken(res, user.id);
 
     console.log('User signed in successfully.');
-    
-    return res.status(200).json({message: 'User signed in successfully.', user:{
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      image: user.image,
-    }});
+
+    return res.status(200).json({message: 'User signed in successfully.', accessToken});
   }catch(error){
     console.error('Error during signin:', error);
     return res.status(500).json({message: 'Internal server error.'});

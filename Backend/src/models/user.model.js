@@ -24,4 +24,25 @@ async function createUser({fullName, email, password, image}){
   }
 }
 
-module.exports = {existingUser, createUser};
+async function onboardingUpdate(userId, fullName, bio, skill, language, location){
+  const query = `UPDATE users
+    SET fullName = ?, bio = ?, skill = ?, language = ?, location = ?, isOnboarded = TRUE
+    WHERE id = ?`;
+    const values = [fullName, bio, skill, language, location, userId];
+
+  const [result] = await pool.query(query, values);
+  return result;
+};
+
+async function findUserById(userId){
+  const query = `
+  SELECT id, fullName, email, image, skill, language, location, bio, isOnboarded, createdAt, updatedAt
+  FROM users
+  WHERE id = ?`;
+
+  const [rows] = await pool.query(query, [userId]);
+
+  return rows[0];
+};
+
+module.exports = {existingUser, createUser, onboardingUpdate, findUserById};

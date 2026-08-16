@@ -4,11 +4,13 @@ const express = require('express');
 const app = express();
 const createTable = require('./src/config/createTable');
 const authRouter = require('./src/routes/auth.routes');
+const userRouter = require('./src/routes/user.routes');
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 app.use(express.json());
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 app.get('/', (req, res)=>{
   res.send('server started!');
