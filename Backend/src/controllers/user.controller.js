@@ -1,4 +1,4 @@
-const {onboardingUpdate, findUserById} = require('../models/user.model');
+const {onboardingUpdate, findUserById, recommendedUsers} = require('../models/user.model');
 const upsertStreamUser = require('../config/stream.js');
 
 const onboard = async(req, res)=>{
@@ -65,6 +65,29 @@ const getMe = async(req, res)=>{
       message: 'Internal server error.'
     });
   }
-}
+};
 
-module.exports = {onboard, getMe};
+const getRecommendedUsers = async (req, res)=>{
+  try{
+    const userId = req.userId;
+
+    const usersRecommended = await recommendedUsers(userId);
+
+    if (usersRecommended.length === 0) {
+      console.log('No recommended users found.');
+      return res.status(404).json({
+        message: 'No recommended users found.'
+      });
+    }
+    console.log('recommended users are listed.');
+    return res.status(200).json({
+      users:usersRecommended
+    });
+  }catch(error){
+    console.error('Error getting recommended users:', error);
+
+    return res.status(500).json({ message: 'Internal server error.'});
+  }
+};
+
+module.exports = {onboard, getMe, getRecommendedUsers};
