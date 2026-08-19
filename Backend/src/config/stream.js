@@ -21,6 +21,29 @@ const upsertStreamUser = async(userData)=>{
     console.error('Error upserting user to Stream:', error);
     throw error;
   }
+};
+
+const partialUpdateUsers = async(userData)=>{
+  try{
+    const response = await streamClient.partialUpdateUsers([userData]);
+
+    console.log('stream response:', response);
+
+    return userData;
+  }catch(error){
+    console.error('Error upserting user to Stream:', error);
+    throw error;
+  }
+};
+
+const generateStreamToken = (userId)=>{
+  try{
+    const stringUserId = userId.toString();
+    return streamClient.createToken(userIdString);
+  }catch(error){
+    console.error('Error generating Stream token:', error);
+    throw error;
+  }
 }
 
-module.exports = upsertStreamUser;
+module.exports = {upsertStreamUser, partialUpdateUsers, generateStreamToken};

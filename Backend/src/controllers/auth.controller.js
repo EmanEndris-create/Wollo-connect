@@ -1,7 +1,7 @@
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const {existingUser, createUser} = require('../models/user.model');
-const upsertStreamUser = require('../config/stream.js');
+const {upsertStreamUser} = require('../config/stream.js');
 const generateToken = require('../utils/generateToken');
 const jwt = require('jsonwebtoken');
 const comparePassword = require('../utils/comparePassword.js');

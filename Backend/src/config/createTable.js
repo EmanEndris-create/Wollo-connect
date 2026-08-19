@@ -28,10 +28,31 @@ async function createTable() {
   );
   `;
 
+  const friendRequestsTable = `
+  CREATE TABLE IF NOT EXISTS friend_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    recipient_id INT NOT NULL,
+    status ENUM('pending', 'accepted') DEFAULT 'pending',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (sender_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE,
+
+    FOREIGN KEY (recipient_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+  );
+`;
+
   try{
     console.log('Creating Tables...');
     await pool.query(userTable);
     await pool.query(userFriendsTable);
+    await pool.query(friendRequestsTable);
     console.log('Tables are created successfully.')
   }catch(error){
     console.error('Error happened when creating tables:', error);

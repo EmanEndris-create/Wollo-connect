@@ -24,11 +24,11 @@ async function createUser({fullName, email, password, image}){
   }
 }
 
-async function onboardingUpdate(userId, fullName, bio, skill, language, location){
+async function onboardingUpdate(userId, bio, skill, language, location){
   const query = `UPDATE users
-    SET fullName = ?, bio = ?, skill = ?, language = ?, location = ?, isOnboarded = TRUE
+    SET bio = ?, skill = ?, language = ?, location = ?, isOnboarded = TRUE
     WHERE id = ?`;
-    const values = [fullName, bio, skill, language, location, userId];
+    const values = [ bio, skill, language, location, userId];
 
   const [result] = await pool.query(query, values);
   return result;
@@ -87,4 +87,15 @@ async function recommendedUsers(userId) {
   return rows;
 }
 
-module.exports = {existingUser, createUser, onboardingUpdate, findUserById, recommendedUsers};
+async function myFriends(userId) {
+  const query = `SELECT u.id, u.fullName, u.image, u.language, u.location, u.skill
+  FROM user_friends uf
+  JOIN users u
+    ON u.id = uf.friend_id
+  WHERE uf.user_id = ?`;
+
+  const [rows] = await pool.query(query, [userId]);
+return rows;
+}
+
+module.exports = {existingUser, createUser, onboardingUpdate, findUserById, recommendedUsers, myFriends};

@@ -1,19 +1,19 @@
-const {onboardingUpdate, findUserById, recommendedUsers} = require('../models/user.model');
-const upsertStreamUser = require('../config/stream.js');
+const {onboardingUpdate, findUserById, recommendedUsers, myFriends} = require('../models/user.model');
+const {partialUpdateUsers} = require('../config/stream.js');
 
 const onboard = async(req, res)=>{
   try{
     const userId = req.userId;
-    const {fullName, bio, skill, language, location}= req.body;
+    const { bio, skill, language, location}= req.body;
 
-    if(!fullName|| !bio|| !skill|| !language|| !location){
+    if( !bio|| !skill|| !language|| !location){
       console.log('the onboarding inputs are not completed!');
       return res.status(400).json({
         message: 'Please fill in all the required fields for onboarding.',
-        missingFields : [!fullName && 'fullName', !bio && 'bio', !skill && 'skill', !language && 'language', !location && 'location'].filter(Boolean)});
+        missingFields : [ !bio && 'bio', !skill && 'skill', !language && 'language', !location && 'location'].filter(Boolean)});
     }
 
-    const result = await onboardingUpdate(userId, fullName, bio, skill, language, location);
+    const result = await onboardingUpdate(userId, bio, skill, language, location);
 
     if(result.affectedRows === 0){
       return res.status(404).json({message: 'User not found or onboarding update failed.'});
@@ -22,16 +22,17 @@ const onboard = async(req, res)=>{
     const updatedUser = await findUserById(userId);
 
       try{
-    await upsertStreamUser({
+    await partialUpdateUsers({
     id: updatedUser.id.toString(),
-    name: fullName,
-    bio: bio,
-    skill: skill,
-    language: language,
-    location: location
+    set:{
+      bio: bio,
+      skill: skill,
+      language: language,
+      location: location
+    }
   });
 
-    console.log(`Stream user updated for ${fullName}`);
+    console.log('Stream user updated.');
   }catch(error){
     console.error('error updating stream user:', error);
   }
@@ -90,4 +91,16 @@ const getRecommendedUsers = async (req, res)=>{
   }
 };
 
-module.exports = {onboard, getMe, getRecommendedUsers};
+const getMyFriends = async(req, res)=>{
+  try{
+    const userId = req.userId;
+    const friends = await myFriends(userId);
+    console.log('friends are listed.');
+    return res.status(200).json({friends});
+  }catch(error){
+    console.error('Error when getting friends:', error);
+    return res.status(500).json({message: 'Internal Server Error.'});
+  }
+};
+
+module.exports = {onboard, getMe, getRecommendedUsers, getMyFriends};
