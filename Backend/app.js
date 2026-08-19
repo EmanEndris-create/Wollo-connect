@@ -7,16 +7,17 @@ const authRouter = require('./src/routes/auth.routes');
 const userRouter = require('./src/routes/user.routes');
 const chatRouter = require('./src/routes/chat.routes');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}))
 app.use(cookieParser());
 app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/chat', chatRouter);
-
-app.get('/', (req, res)=>{
-  res.send('server started!');
-});
 
 //Start The Server
 async function startServer(){
