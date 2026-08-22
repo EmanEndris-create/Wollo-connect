@@ -259,7 +259,7 @@ function SignupPage() {
 
         {/* ================= RIGHT SIDE ================= */}
         <div className="hidden md:block w-full md:w-1/2">
-          <div className="h-full min-h-[500px] rounded-box overflow-hidden">
+          <div className="h-full min-h-125 rounded-box overflow-hidden">
             <img
               src="/signup-image.jpg"
               alt="Welcome to Wollo-Connect"
