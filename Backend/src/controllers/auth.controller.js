@@ -126,10 +126,12 @@ const refresh = async(req, res)=>{
 
     const userId = decoded.userId;
 
-    const {accessToken} = generateToken(res, userId);
+    const accessToken = generateToken(res, userId);
 
     console.log('Access token refreshed successfully.');
-    return res.status(200).json({message: 'Access token refreshed successfully.'});
+    return res.status(200).json({message: 'Access token refreshed successfully.',
+      accessToken
+    });
   }catch(error){
     console.log('invalid or expired refresh token');
     return res.status(401).json({message: 'Invalid or expired refresh token.'});
