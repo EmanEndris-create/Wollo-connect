@@ -25,7 +25,7 @@ function SignupPage() {
 
     signupMutation(formData, {
       onSuccess: (data) => {
-        console.log("Signup successful:", data);
+        console.log("Signed up successfuly:", data);
         setAccessToken(data.accessToken);
       },
     });

@@ -24,6 +24,7 @@ function OnboardingPage() {
   } = useMutateQuery({
     method: "POST",
     url: "/user/onboarding",
+    queryKey: "authUser"
   });
 
   const handleOnboarding = (e)=>{

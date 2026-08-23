@@ -1,9 +1,210 @@
+import { useState } from "react";
+import { Link } from "react-router-dom"
+import { setAccessToken } from "../lib/token";
+import useMutateQuery from "../hooks/useMutateQuery";
 
 
 function LoginPage() {
+  const [formData, setFormData] = useState({
+      email: "",
+      password: "",
+    });
+
+    const {
+    mutate: LoginMutation,
+    isPending,
+    error,
+  } = useMutateQuery({
+    method: "POST",
+    url: "/auth/login",
+    queryKey: "authUser",
+  });
+
+  const handleLogin = (e) => {
+      e.preventDefault();
+  
+      LoginMutation(formData, {
+        onSuccess: (data) => {
+          console.log("logged in successfuly:", data);
+          setAccessToken(data.accessToken);
+        },
+      });
+    };
+
   return (
-    <div>
-      
+    <div className="min-h-screen w-full flexCenter bg-[#f3f4f6] p-4">
+      {/* Main Signup Container */}
+      <div className="w-full max-w-4xl bg-white rounded-xl p-6 flex flex-col md:flex-row gap-6">
+
+        {/* ================= LEFT SIDE ================= */}
+        <div className="w-full md:w-1/2 bg-base-100 p-6 md:p-8 rounded-box">
+
+          {/* Logo */}
+          <div>
+            <img
+              src="/logo.jpg"
+              alt="Wollo-Connect"
+              className="w-60 h-auto"
+            />
+          </div>
+
+          {/* Heading */}
+          <div className="mb-5">
+            <h2 className="font-bold">
+              Welcome Back
+            </h2>
+
+            <p className="para mt-1">
+              Welcome to Wollo-Connect. Please fill in the form below to login to your account.
+            </p>
+          </div>
+
+          {error && (
+            <div className="alert alert-error mb-4">
+              <span>
+                {error.response?.data?.message ||
+                  "Something went wrong. Please try again."}
+              </span>
+            </div>
+          )}
+          {/* ================= FORM ================= */}
+          <form onSubmit={handleLogin}>
+
+            {/* Email */}
+            <fieldset className="fieldset mb-3">
+              <legend className="fieldset-legend py-0.5">
+                Email
+              </legend>
+
+              <label className="input input-sm validator w-full">
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <rect
+                      width="20"
+                      height="16"
+                      x="2"
+                      y="4"
+                      rx="2"
+                    />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </g>
+                </svg>
+
+                <input
+                  type="email"
+                  placeholder="mail@site.com"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      email: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </label>
+
+              <p className="validator-hint hidden text-xs">
+                Enter a valid email address.
+              </p>
+            </fieldset>
+
+            {/* Password */}
+            <fieldset className="fieldset mb-3">
+              <legend className="fieldset-legend py-0.5">
+                Password
+              </legend>
+
+              <label className="input input-sm validator w-full">
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
+                    <circle
+                      cx="16.5"
+                      cy="7.5"
+                      r=".5"
+                      fill="currentColor"
+                    />
+                  </g>
+                </svg>
+
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      password: e.target.value,
+                    })
+                  }
+                  required
+                  minLength="8"
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  title="Must contain at least 8 characters, one number, one lowercase letter, and one uppercase letter"
+                />
+              </label>
+
+              <p className="validator-hint hidden text-xs">
+                Must be 8+ characters with at least one number, lowercase
+                letter, and uppercase letter.
+              </p>
+            </fieldset>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="btn btn-primary btn-sm w-full"
+              disabled={isPending}
+            >
+              {isPending ? "Logging In..." : "Login"}
+            </button>
+
+            {/* Sign In */}
+            <p className="text-xs mt-4 text-center md:text-left">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="link link-primary"
+              >
+                Create one
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        {/* ================= RIGHT SIDE ================= */}
+        <div className="hidden md:block w-full md:w-1/2">
+          <div className="h-full min-h-125 rounded-box overflow-hidden">
+            <img
+              src="/signup-image.jpg"
+              alt="Welcome to Wollo-Connect"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+      </div>
     </div>
   )
 }
