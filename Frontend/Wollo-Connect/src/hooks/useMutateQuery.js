@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance  from "../lib/api";
 
-const useMutateQuery = ({ method, url, queryKey }) => {
+const useMutateQuery = ({ method, url, queryKey, invalidate = true }) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending, error } = useMutation({
@@ -16,7 +16,7 @@ const useMutateQuery = ({ method, url, queryKey }) => {
     },
 
     onSuccess: () => {
-      if (queryKey) {
+      if (queryKey && invalidate) {
         queryClient.invalidateQueries({
           queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
         });

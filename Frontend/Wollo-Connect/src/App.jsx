@@ -12,6 +12,8 @@ import CallPage from './pages/CallPage';
 import OnboardingPage from './pages/OnboardingPage';
 import { Toaster } from 'react-hot-toast';
 import useAuthUser from './hooks/useAuthUser';
+import Layout from './components/layout';
+
 
 function App() {
   const { authenticatedUser, isLoading } = useAuthUser();
@@ -32,11 +34,15 @@ function App() {
       <Routes>
         <Route path='/signup' element = {isAuth ? <Navigate to = {isOnboarded? '/' : '/onboarding'} /> : <SignupPage />  }/>
         <Route path='/login' element = {isAuth ? <Navigate to = {isOnboarded? '/' : '/onboarding'} /> : <LoginPage />  }/>
-        <Route path='/' element={isAuth && isOnboarded ? (<HomePage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
+
+        <Route path='/' element = {<Layout />}>
+        <Route index element={isAuth && isOnboarded ? (<HomePage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/notifications' element={isAuth && isOnboarded ? (<NotificationsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/connections' element={isAuth && isOnboarded ? (<ConnectionsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/chat' element={isAuth && isOnboarded ? (<ChatPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/requests' element={isAuth && isOnboarded ? (<RequestsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
+        </Route>
+
         <Route path='/call' element={isAuth && isOnboarded ? (<CallPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/onboarding' element={isAuth ? (isOnboarded ? <Navigate to='/' /> : <OnboardingPage /> ) : (<LoginPage />)} />
       </Routes>
