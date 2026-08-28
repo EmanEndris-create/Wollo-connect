@@ -61,7 +61,21 @@ async function recommendedUsers(userId) {
         CASE WHEN otherUser.skill = currentUser.skill THEN 5 ELSE 0 END +
         CASE WHEN otherUser.language = currentUser.language THEN 2 ELSE 0 END +
         CASE WHEN otherUser.location = currentUser.location THEN 1 ELSE 0 END
-      ) AS matchScore
+      ) AS matchScore,
+
+      CASE
+        WHEN EXISTS (
+          SELECT 1
+          FROM friend_requests fr
+          WHERE
+            fr.sender_id = ?
+            AND fr.recipient_id = otherUser.id
+            AND fr.status = 'pending'
+        )
+        THEN 'outgoing'
+
+        ELSE 'none'
+      END AS requestStatus
 
     FROM users otherUser
     JOIN users currentUser
@@ -81,7 +95,7 @@ async function recommendedUsers(userId) {
 
     ORDER BY matchScore DESC, otherUser.createdAt DESC
     LIMIT 20`;
-  const values = [userId,userId,userId,userId];
+  const values = [userId,userId,userId,userId,userId];
 
   const [rows] = await pool.query(query, values);
   return rows;

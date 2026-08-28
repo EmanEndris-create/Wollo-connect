@@ -47,6 +47,18 @@ async function createFriendRequest(senderId, recipientId) {
   return result.insertId;
 };
 
+async function deleteFriendRequest(senderId, recipientId) {
+  const query = `DELETE FROM friend_requests
+  WHERE sender_id = ?
+  AND recipient_id = ?
+  AND status = 'pending'
+  `;
+
+  const [result] = await pool.query(query, [senderId, recipientId]);
+  return result;
+  
+};
+
 async function getIncomingFriendRequests(userId) {
   const query = `
     SELECT
@@ -177,4 +189,4 @@ async function addFriend(userId, friendId) {
   return result;
 }
 
-module.exports = {areFriends, findExistingFriendRequest, createFriendRequest, getIncomingFriendRequests, getAcceptedFriendRequests, findOutgoingFriendRequests, findFriendRequestById, updateFriendRequestStatus, addFriend};
+module.exports = {areFriends, findExistingFriendRequest, createFriendRequest, deleteFriendRequest, getIncomingFriendRequests, getAcceptedFriendRequests, findOutgoingFriendRequests, findFriendRequestById, updateFriendRequestStatus, addFriend};
