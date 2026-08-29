@@ -47,7 +47,7 @@ function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {friends.map((user) => (
               <UserCard key={user.id} user={user}
-              isFriend={true} />
+              type = 'friend' />
             ))}
           </div>
         )}
@@ -77,8 +77,9 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
             {recommendedUsers.map((user) => (
-              <UserCard key={user.id} user={user}
-              isFriend={false} />
+              <UserCard key={user.id} 
+              user={user}
+              type = 'recommendation' />
             ))}
           </div>
         )}

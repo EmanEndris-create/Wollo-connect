@@ -61,29 +61,17 @@ async function recommendedUsers(userId) {
         CASE WHEN otherUser.skill = currentUser.skill THEN 5 ELSE 0 END +
         CASE WHEN otherUser.language = currentUser.language THEN 2 ELSE 0 END +
         CASE WHEN otherUser.location = currentUser.location THEN 1 ELSE 0 END
-      ) AS matchScore,
-
-      CASE
-        WHEN EXISTS (
-          SELECT 1
-          FROM friend_requests fr
-          WHERE
-            fr.sender_id = ?
-            AND fr.recipient_id = otherUser.id
-            AND fr.status = 'pending'
-        )
-        THEN 'outgoing'
-
-        ELSE 'none'
-      END AS requestStatus
+      ) AS matchScore
 
     FROM users otherUser
+    
     JOIN users currentUser
       ON currentUser.id = ?
 
     WHERE
       otherUser.id != ?
       AND otherUser.isOnboarded = TRUE
+
       AND NOT EXISTS (
         SELECT 1
         FROM user_friends uf
@@ -91,6 +79,15 @@ async function recommendedUsers(userId) {
           (uf.user_id = ? AND uf.friend_id = otherUser.id)
           OR
           (uf.friend_id = ? AND uf.user_id = otherUser.id)
+      )
+
+      AND NOT EXISTS (
+        SELECT 1
+        FROM friend_requests fr
+        WHERE
+          fr.sender_id = ?
+          AND fr.recipient_id = otherUser.id
+          AND fr.status = 'pending'
       )
 
     ORDER BY matchScore DESC, otherUser.createdAt DESC

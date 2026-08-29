@@ -1,4 +1,4 @@
-import { BellRing, Home, LogOutIcon, LucideMails } from "lucide-react"
+import { Home, LogOutIcon, LucideMails, SendIcon } from "lucide-react"
 import { Link, NavLink } from "react-router-dom"
 import useAuthUser from "../hooks/useAuthUser"
 import useLogout from "../hooks/useLogout"
@@ -30,9 +30,9 @@ function Sidebar() {
       icon: <LucideMails size={25} className="opacity-50" />
     },
     {
-      path: '/notifications',
-      label: 'Notifications',
-      icon: <BellRing size={25} className="opacity-50" />
+      path: '/requests',
+      label: 'Outgoing Requests',
+      icon: <SendIcon size={25} className="opacity-50" />
     }
   ]
   return (

@@ -126,17 +126,17 @@ async function getAcceptedFriendRequests(userId) {
 async function findOutgoingFriendRequests(userId) {
   const query = `
     SELECT
-      fr.id,
-      fr.sender_id,
-      fr.recipient_id,
+      u.id,
+      fr.id AS requestId,
       fr.status,
       fr.createdAt,
 
-      u.id AS recipientId,
       u.fullName,
       u.image,
       u.language,
-      u.skill
+      u.skill,
+      u.location,
+      u.bio
 
     FROM friend_requests fr
 

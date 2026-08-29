@@ -2,7 +2,7 @@ import { MapPinIcon, UserPlusIcon, MessageSquareIcon, XIcon } from 'lucide-react
 import { getCountryFlag } from './getCountryFlag';
 import useMutateQuery from '../hooks/useMutateQuery';
 
-export const UserCard = ({ user, isFriend = false }) => {
+export const UserCard = ({ user, type}) => {
   // const [requestSent, setRequestSent] = useState(user.requestStatus === 'outgoing');
   const requestSent = user.requestStatus === "outgoing";
 
@@ -21,7 +21,7 @@ export const UserCard = ({ user, isFriend = false }) => {
   }= useMutateQuery({
     method: "DELETE",
     url: `/user/friend-request/${user.id}`,
-    queryKey: "recommended",
+    queryKey: "outgoingRequests",
   });
 
   const handleConnectionRequest = ()=>{
@@ -68,12 +68,14 @@ export const UserCard = ({ user, isFriend = false }) => {
               </div>
             </div>
 
-                {isFriend? (
+                {type === 'friend' && (
                   <button className='btn btn-xs btn-outline btn-primary'>
                     <MessageSquareIcon className="size-4 mr-1" />
                     Message
                   </button>
-                ) : (
+                )}
+                
+                {type === 'recommendation' && (
                   <button
                   onClick={handleConnectionRequest}
                   disabled={isLoading}
@@ -93,6 +95,23 @@ export const UserCard = ({ user, isFriend = false }) => {
                     )}
                   </button>
                 )}
+
+                {type === "outgoing" && (
+              <button
+                onClick={()=> cancelRequest()}
+                disabled={isCancelling}
+                className="btn btn-xs btn-error btn-soft"
+              >
+                {isCancelling ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : (
+                  <>
+                    <XIcon className="size-4 mr-1" />
+                    Cancel Request
+                  </>
+                )}
+              </button>
+            )}
           </div>
 
 
