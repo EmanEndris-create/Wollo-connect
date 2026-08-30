@@ -2,9 +2,17 @@ import { Link, Outlet } from "react-router-dom"
 import ThemeSelector from "./ThemeSelector"
 import Sidebar from "./Sidebar"
 import { BellRing } from "lucide-react"
+import useApiQuery from "../hooks/useApiQuery";
 
 
 function Layout() {
+  const { data } = useApiQuery(
+  "/user/friend-requests",
+  "friendRequests"
+);
+
+const incomingRequests = data?.incomingRequests || [];
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle inline" />
@@ -19,7 +27,11 @@ function Layout() {
               <Link to = {'/notifications'} className= 'btn rounded-full gap-3'>
               <div className="relative inline-flex items-center">
                 <BellRing size={22} className="opacity-70" />
-                <span className="badge badge-xs badge-info absolute -top-2 -right-2 px-1">{'0'}</span>
+
+                {incomingRequests.length > 0 && (
+                  <span className="badge badge-xs badge-info absolute -top-2 -right-2 px-1">{incomingRequests.length}</span>
+                )}
+
               </div>
               <span>Notifications</span>
               </Link>
