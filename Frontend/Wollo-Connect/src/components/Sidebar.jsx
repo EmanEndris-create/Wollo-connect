@@ -39,7 +39,7 @@ function Sidebar() {
     <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64 pt-3">
       {/* LOGO */}
       <Link to='/' className="flex gap-1 pl-3">
-        <img src="./logo.jpg" alt="Wollo-Connect"
+        <img src="/logo.jpg" alt="Wollo-Connect"
           height={40} width={200} />
       </Link>
       {/* Sidebar content here */}

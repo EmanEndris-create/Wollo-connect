@@ -1,15 +1,16 @@
 import { MapPinIcon, UserPlusIcon, MessageSquareIcon, XIcon } from 'lucide-react';
 import { getCountryFlag } from './getCountryFlag';
 import useMutateQuery from '../hooks/useMutateQuery';
+import { Link } from 'react-router-dom'
 
-export const UserCard = ({ user, type}) => {
+export const UserCard = ({ user, type }) => {
   // const [requestSent, setRequestSent] = useState(user.requestStatus === 'outgoing');
   const requestSent = user.requestStatus === "outgoing";
 
   const {
     mutate: sendRequest,
     isPending: isSending,
-  }= useMutateQuery({
+  } = useMutateQuery({
     method: "POST",
     url: `/user/friend-request/${user.id}`,
     queryKey: "recommended",
@@ -18,21 +19,21 @@ export const UserCard = ({ user, type}) => {
   const {
     mutate: cancelRequest,
     isPending: isCancelling,
-  }= useMutateQuery({
+  } = useMutateQuery({
     method: "DELETE",
     url: `/user/friend-request/${user.id}`,
     queryKey: "outgoingRequests",
   });
 
-  const handleConnectionRequest = ()=>{
-    if(requestSent) {
+  const handleConnectionRequest = () => {
+    if (requestSent) {
       // cancelRequest(undefined, {
       //   onSuccess: ()=>{
       //     setRequestSent(false);
       //   },
       // });
       cancelRequest();
-    }else{
+    } else {
       // sendRequest(undefined, {
       //   onSuccess:()=>{
       //     setRequestSent(true);
@@ -68,37 +69,40 @@ export const UserCard = ({ user, type}) => {
               </div>
             </div>
 
-                {type === 'friend' && (
-                  <button className='btn btn-xs btn-outline btn-primary'>
-                    <MessageSquareIcon className="size-4 mr-1" />
-                    Message
-                  </button>
-                )}
-                
-                {type === 'recommendation' && (
-                  <button
-                  onClick={handleConnectionRequest}
-                  disabled={isLoading}
-                  className={`btn btn-xs ${requestSent ? "btn-error btn-soft" : "btn-info btn-soft"}`}>
-                    {isLoading ? (
-                      <span className='loading loading-spinner loading-xs'></span>
-                    ) : requestSent ? (
-                      <>
-                        <XIcon className="size-4 mr-1" />
-                        Cancel Request
-                      </>
-                    ):(
-                      <>
-                        <UserPlusIcon className="size-4 mr-1" />
-                        Connection Request
-                      </>
-                    )}
-                  </button>
-                )}
+            {type === 'friend' && (
+              <Link
+                to={`/chat/${user.id}`}
+                className="btn btn-xs btn-outline btn-primary"
+              >
+                <MessageSquareIcon className="size-4 mr-1" />
+                Message
+              </Link>
+            )}
 
-                {type === "outgoing" && (
+            {type === 'recommendation' && (
               <button
-                onClick={()=> cancelRequest()}
+                onClick={handleConnectionRequest}
+                disabled={isLoading}
+                className={`btn btn-xs ${requestSent ? "btn-error btn-soft" : "btn-info btn-soft"}`}>
+                {isLoading ? (
+                  <span className='loading loading-spinner loading-xs'></span>
+                ) : requestSent ? (
+                  <>
+                    <XIcon className="size-4 mr-1" />
+                    Cancel Request
+                  </>
+                ) : (
+                  <>
+                    <UserPlusIcon className="size-4 mr-1" />
+                    Connection Request
+                  </>
+                )}
+              </button>
+            )}
+
+            {type === "outgoing" && (
+              <button
+                onClick={() => cancelRequest()}
                 disabled={isCancelling}
                 className="btn btn-xs btn-error btn-soft"
               >

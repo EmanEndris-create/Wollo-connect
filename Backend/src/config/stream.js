@@ -39,7 +39,8 @@ const partialUpdateUsers = async(userData)=>{
 const generateStreamToken = (userId)=>{
   try{
     const stringUserId = userId.toString();
-    return streamClient.createToken(userIdString);
+    const token = streamClient.createToken(stringUserId);
+    return token;
   }catch(error){
     console.error('Error generating Stream token:', error);
     throw error;

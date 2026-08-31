@@ -39,7 +39,7 @@ function App() {
         <Route index element={isAuth && isOnboarded ? (<HomePage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/notifications' element={isAuth && isOnboarded ? (<NotificationsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/connections' element={isAuth && isOnboarded ? (<ConnectionsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
-        <Route path='/chat' element={isAuth && isOnboarded ? (<ChatPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
+        <Route path='/chat/:id' element={isAuth && isOnboarded ? (<ChatPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/requests' element={isAuth && isOnboarded ? (<OutgoingRequestsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         </Route>
 

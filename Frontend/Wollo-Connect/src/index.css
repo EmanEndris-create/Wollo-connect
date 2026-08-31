@@ -10,6 +10,40 @@
   --font-sans: "Inter", sans-serif;
 }
 
+.str-chat__channel {
+  @apply flex items-center justify-center bg-transparent;
+}
+
+.str-chat__container {
+  @apply w-full h-[87vh] rounded-xl overflow-hidden;
+}
+.str-chat__container div div {
+  @apply border-base-300;
+}
+
+.str-chat__main-panel {
+ @apply h-[87vh]!;
+}
+.str-chat__channel-header {
+  @apply bg-base-100 text-base-content;
+}
+
+.str-chat__list {
+  @apply bg-base-100 p-3;
+}
+
+.str-chat__message-input {
+  @apply bg-base-100 border-t border-base-300;
+}
+
+.str-chat__message-textarea {
+  @apply text-base-content!;
+}
+
+.str-chat__empty-channel {
+  @apply bg-transparent;
+}
+
 /* =========================
    GLOBAL
 ========================= */
