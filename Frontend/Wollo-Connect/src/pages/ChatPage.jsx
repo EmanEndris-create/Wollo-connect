@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import useAuthUser  from "../hooks/useAuthUser";
 import useStreamToken from '../hooks/useStreamToken';
 import { Channel, ChannelHeader, Chat, MessageList, Thread, MessageComposer, Window } from 'stream-chat-react'
-// import CallButton from "../components/CallButton";
+import CallButton from "../components/CallButton";
+import toast from "react-hot-toast";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
@@ -103,6 +104,24 @@ function ChatPage() {
     );
   }
 
+  const handleVideoCall =  async () =>{
+    if (!channel) return;
+
+    try {
+    const callId = channel.id;
+
+    const callUrl = `${window.location.origin}/call/${callId}`;
+
+    await channel.sendMessage({
+      text: `I've started a video call. Join me here: ${callUrl}`,
+    });
+    toast.success("Video call link sent!");
+  } catch (error) {
+    console.error("Failed to send video call:", error);
+    toast.error("Failed to send video call link.");
+  }
+  };
+
   return (
     <div className="h-[87vh] overflow-hidden">
       <div className="card bg-base-100 card-sm h-full">
@@ -110,7 +129,7 @@ function ChatPage() {
           <Chat client={chatClient}>
             <Channel channel={channel}>
               <div className="w-full relative h-full">
-                {/* <CallButton handleVideoCall={'handleVideoCall'} /> */}
+                <CallButton handleVideoCall={handleVideoCall} />
                 <Window>
                   <ChannelHeader />
                   <MessageList />

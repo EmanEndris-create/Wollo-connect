@@ -43,7 +43,7 @@ function App() {
         <Route path='/requests' element={isAuth && isOnboarded ? (<OutgoingRequestsPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         </Route>
 
-        <Route path='/call' element={isAuth && isOnboarded ? (<CallPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
+        <Route path='/call/:id' element={isAuth && isOnboarded ? (<CallPage />) : (<Navigate to={isAuth ? '/onboarding' : '/login'} />)} />
         <Route path='/onboarding' element={isAuth ? (isOnboarded ? <Navigate to='/' /> : <OnboardingPage /> ) : (<LoginPage />)} />
       </Routes>
       <Toaster position='bottom-right' toastOptions={{ className: "!bg-base-100 !text-base-content" }} />
