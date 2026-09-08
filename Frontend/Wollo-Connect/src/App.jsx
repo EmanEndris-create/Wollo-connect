@@ -11,7 +11,7 @@ import CallPage from './pages/CallPage';
 import OnboardingPage from './pages/OnboardingPage';
 import { Toaster } from 'react-hot-toast';
 import useAuthUser from './hooks/useAuthUser';
-import Layout from './components/layout';
+import Layout from './components/Layout';
 import OutgoingRequestsPage from './pages/OutgoingRequestsPage';
 
 
