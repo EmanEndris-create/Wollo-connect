@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getAccessToken, setAccessToken, clearAccessToken } from './token';
 
-const BASE_URL = import.meta.env.MODE === 'development' ? 'http://localhost:3000/api' : '/api'
+const BASE_URL = import.meta.env.MODE === 'development' ? 'http://localhost:3000/api' : import.meta.env.VITE_API_URL;
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
