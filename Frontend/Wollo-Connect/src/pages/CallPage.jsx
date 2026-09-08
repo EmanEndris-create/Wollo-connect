@@ -73,7 +73,10 @@ function CallPage() {
           create: true,
         });
 
+        await callInstance.microphone.enable();
+
         console.log("Joined call successfully");
+        console.log("Microphone enabled:", callInstance.microphone.enabled);
 
         setVideoClient(client);
         setCall(callInstance);
